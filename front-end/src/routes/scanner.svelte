@@ -4,7 +4,7 @@ import {onMount, createEventDispatcher} from 'svelte';
 let disabled = false;
     let promise = Promise.resolve([]);
     let isbn;
-    $: endpoint = "https://openlibrary.org/api/books?bibkeys=ISBN:"+isbn+"&jscmd=data&format=json" ;
+    $: endpoint = "http://openlibrary.org/search.json?q="+isbn+"&fields" ;
     let dispatch = createEventDispatcher();
 	let status = '';
 	let error = '';
@@ -92,34 +92,31 @@ let disabled = false;
 
 
     ////////////////RECUPERATION INFOS LIVRES//////////////////////////////////////////
-    async function fetchBook() {
-		const response = await fetch(endpoint);
+    let loading = false;
+	let todos = [];
 
+    const loadData = async () => {
+
+        loading = true;
+        const response = await fetch(endpoint)
+        todos = [...todos,await response.json()];
+     
 		if (response.ok) {
-        console.log(response.body)
-  		return await response;
-			
+			loading = false;
 		} else {
-			throw new Error(users);
+			throw new Error(text);
 		}
-	}
-  function handleClick() {
-		// Now set it to the real fetch promise 
-    promise = fetchBook();
-    disabled = true;
-	}
+    }
+
 </script>
 
     <div class="wrap">
-
         <p>{ status }</p>
         <p>{foundEan}</p>
         <p class="error">{ error }</p>
-
         <p>
             {#if devices.length}
                 <select class="camera" bind:value={selectedDevice}>
-
                     {#each devices as device}
                         <option value={device}>{ device.label }</option>
                     {/each}
@@ -130,24 +127,23 @@ let disabled = false;
         </p>
 
         <div id="scannerPreview"></div>
-
-        <br>
+        <br />
 
         <button type="button" on:click={() => dispatch('cancel')}>Stop scanning</button>
+        <button on:click={loadData}>Rechercher Livre</button>
+        {#if loading === true}
+            Loading...
+	    {:else}
+            {#each todos as {docs}}
+                {#each docs as infos}
+                    <h2>{infos.title}</h2>
+                    <h2>{infos.author_name}</h2>
+                {/each}
+            {/each}
+        {/if}
 
     </div>
-    <button on:click={ handleClick } { disabled } >
-        Rechercher Livre
-    </button>
-    {#await promise}
-    <p>...waiting</p>
-    {:then promise}
-    {#each devices as device}
-    <h4>{device}</h4>
-    {/each}
-    {:catch error}
-	<p>An error occurred!</p>
-{/await}
+    
 <style>
     .wrap {
         text-align: center;
