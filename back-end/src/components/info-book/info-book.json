@@ -1,0 +1,32 @@
+{
+  "collectionName": "components_info_book_info_books",
+  "info": {
+    "displayName": "infoBook",
+    "icon": "align-justify",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "author": {
+      "type": "string"
+    },
+    "books": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::book.book"
+    },
+    "cover": {
+      "type": "string"
+    },
+    "barcode": {
+      "type": "biginteger",
+      "unique": true,
+      "required": true,
+      "max": "9999999999999",
+      "min": "100000000"
+    }
+  }
+}

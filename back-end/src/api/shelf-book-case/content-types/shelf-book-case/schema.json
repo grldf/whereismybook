@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "shelf_book_cases",
+  "info": {
+    "singularName": "shelf-book-case",
+    "pluralName": "shelf-book-cases",
+    "displayName": "shelfBookCase",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "bookCaseName": {
+      "type": "string"
+    },
+    "books": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::book.book",
+      "mappedBy": "shelf_book_case"
+    },
+    "furniture": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::furniture.furniture",
+      "inversedBy": "shelf_book_cases"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "books",
+  "info": {
+    "singularName": "book",
+    "pluralName": "books",
+    "displayName": "book",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "bookInfo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "info-book.info-book"
+    },
+    "shelf_book_case": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::shelf-book-case.shelf-book-case",
+      "inversedBy": "books"
+    }
+  }
+}
