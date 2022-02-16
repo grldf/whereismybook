@@ -1,8 +1,9 @@
 <script>
 import Quagga from 'quagga';
 import {onMount, createEventDispatcher} from 'svelte';
+//import Index from './index.svelte';
+import Mutation from './Mutation.svelte';
 let disabled = false;
-    let promise = Promise.resolve([]);
     let isbn;
     $: endpoint = "http://openlibrary.org/search.json?q="+isbn+"&fields" ;
     let dispatch = createEventDispatcher();
@@ -10,7 +11,7 @@ let disabled = false;
 	let error = '';
 	let devices = [];
 	let selectedDevice;
-    let foundEan = '';
+    let foundEan;
     let text = "ISBN:";
 ////////////////SCAN BARCODE//////////////////////////////////////////
 	async function _populateCameraDevices() {
@@ -23,7 +24,7 @@ let disabled = false;
 		selectedDeviceLabel = devices.find(dev => dev.label === selectedDeviceLabel);
 	}
 	onMount(() => {
-		status = 'Preparing scan...';
+		status = 'Initialisation du scanner de code barre';
 		Quagga.init({
 			inputStream : {
 				name : "Live",
@@ -51,14 +52,13 @@ let disabled = false;
 				return;
 			}
 			_populateCameraDevices();
-			status = `Scanning for EAN...`;
+			status = `Vous pouvez scanner vos code barre`;
 			Quagga.start();
 		});
 		Quagga.onDetected(result => {
 		    foundEan = result.codeResult.code;
             isbn = foundEan;
-			Quagga.stop();
-		    status = 'Found EAN ' + foundEan;
+		    status = 'Le code barre est :' + foundEan;
 		    setTimeout(() => dispatch('ean', {
 		        ean: foundEan,
                 imageSrc: Quagga.canvas.dom.image.toDataURL()
@@ -95,24 +95,24 @@ let disabled = false;
     let loading = false;
 	let todos = [];
 
-    const loadData = async () => {
+    const  loadData = async() =>  {
 
-        loading = true;
+        
         const response = await fetch(endpoint)
-        todos = [...todos,await response.json()];
-     
+        todos = [...todos,await response.json()]
 		if (response.ok) {
 			loading = false;
+            return todos;
 		} else {
 			throw new Error(text);
 		}
     }
+    
 
 </script>
 
     <div class="wrap">
         <p>{ status }</p>
-        <p>{foundEan}</p>
         <p class="error">{ error }</p>
         <p>
             {#if devices.length}
@@ -129,17 +129,20 @@ let disabled = false;
         <div id="scannerPreview"></div>
         <br />
 
-        <button type="button" on:click={() => dispatch('cancel')}>Stop scanning</button>
         <button on:click={loadData}>Rechercher Livre</button>
         {#if loading === true}
             Loading...
 	    {:else}
-            {#each todos as {docs}}
-                {#each docs as infos}
-                    <h2>{infos.title}</h2>
-                    <h2>{infos.author_name}</h2>
-                {/each}
-            {/each}
+        {#each todos as infos}
+        {#each infos.docs as info}
+        <Mutation 
+            title={info.title} 
+            author={info.author_name[0]} 
+            cover={info.cover_i.toString()}
+            barcode={foundEan}
+        />
+        {/each}
+        {/each}
         {/if}
 
     </div>

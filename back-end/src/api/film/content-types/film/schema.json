@@ -8,11 +8,15 @@
     "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
     "titre": {
+      "type": "string",
+      "unique": true
+    },
+    "author": {
       "type": "string"
     }
   }

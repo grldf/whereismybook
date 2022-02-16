@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "biblios",
+  "info": {
+    "singularName": "biblio",
+    "pluralName": "biblios",
+    "displayName": "biblio",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "biblioName": {
+      "type": "string",
+      "default": "Ma bibliothèque",
+      "maxLength": 40,
+      "minLength": 1
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user",
+      "mappedBy": "biblio"
+    },
+    "biblios": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::biblio.biblio",
+      "mappedBy": "biblio"
+    },
+    "biblio": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::biblio.biblio",
+      "inversedBy": "biblios"
+    }
+  }
+}

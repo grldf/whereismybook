@@ -16,7 +16,7 @@
   query(posts)
   </script>
 <div>
-  {#if $posts.fetching}
+    {#if $posts.fetching}
     <p>Loading...</p>
 {:else if $posts.error}
     <p>Oopsie! {$posts.error.message}</p>

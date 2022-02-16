@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "furnitures",
+  "info": {
+    "singularName": "furniture",
+    "pluralName": "furnitures",
+    "displayName": "furniture",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "furnitureName": {
+      "type": "string"
+    },
+    "shelf_book_cases": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::shelf-book-case.shelf-book-case",
+      "mappedBy": "furniture"
+    },
+    "biblio": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::biblio.biblio"
+    }
+  }
+}
